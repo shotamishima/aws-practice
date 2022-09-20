@@ -1,4 +1,4 @@
-# java
+# java #######################
 # Compiled class file
 *.class
 
@@ -20,7 +20,7 @@
 *.tar.gz
 *.rar
 
-# terraform
+# terraform ##################
 **/.terraform/*
 
 # .tfstate files
@@ -55,7 +55,9 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# aws
+.terraform.lock.hcl
+
+# aws ###################
 SettingInfo.java
 
 # general
