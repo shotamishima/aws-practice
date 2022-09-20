@@ -1,0 +1,3 @@
+digraph "org.example.basicapp:KinesisHandle:jar:1.0-SNAPSHOT" { 
+	"org.example.basicapp:KinesisHandle:jar:1.0-SNAPSHOT" -> "junit:junit:jar:3.8.1:test" ; 
+ } 
