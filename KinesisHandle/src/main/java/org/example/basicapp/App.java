@@ -5,7 +5,6 @@ package org.example.basicapp;
  *
  */
 
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.reactivestreams.Subscriber;
@@ -18,7 +17,6 @@ import software.amazon.awssdk.services.kinesis.model.SubscribeToShardEventStream
 import software.amazon.awssdk.services.kinesis.model.SubscribeToShardRequest;
 import software.amazon.awssdk.services.kinesis.model.SubscribeToShardResponse;
 import software.amazon.awssdk.services.kinesis.model.SubscribeToShardResponseHandler;
-
 
 public class App {
     public static void main(String[] args) {
@@ -34,6 +32,9 @@ public class App {
         SubscribeToShardResponseHandler responseHandler = SubscribeToShardResponseHandler.builder()
                 .onError(t -> System.err.println("Error during stream - " + t.getMessage()))
                 .subscriber(MySubscriber::new).build();
+
+        client.subscribeToShard(request, responseHandler);
+        client.close();
     }
 
     /**
