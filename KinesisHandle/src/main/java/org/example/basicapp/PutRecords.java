@@ -31,7 +31,6 @@ public class PutRecords {
 
 	public static void setData(KinesisClient kinesisClient, String streamName) {
 
-
 		try {
 			DataGenerator dataGenerator = new DataGenerator();
 

@@ -74,7 +74,7 @@ public class StockTrade {
 
     @Override
     public String toString() {
-        return String.format("ID %d: %s %d shares of %s for $%.0.2f", id, tradeType, quantity,
+        return String.format("ID %d: %s %d shares of %s for $%.02f", id, tradeType, quantity,
                 tickerSymbol, price);
     }
 }

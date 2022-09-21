@@ -18,15 +18,15 @@ import software.amazon.awssdk.services.kinesis.model.SubscribeToShardRequest;
 import software.amazon.awssdk.services.kinesis.model.SubscribeToShardResponse;
 import software.amazon.awssdk.services.kinesis.model.SubscribeToShardResponseHandler;
 
-public class App {
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
+public class SubscribeRecord {
 
-        Region region = Region.US_EAST_1;
+    public static void main(String[] args) {
+
+        Region region = Region.AP_NORTHEAST_1;
         KinesisAsyncClient client = KinesisAsyncClient.builder().region(region).build();
 
         SubscribeToShardRequest request = SubscribeToShardRequest.builder()
-                .consumerARN(SettingInfo.CONSUMER_ARN).shardId("arn:aws:kinesis:us-east-1:")
+                .consumerARN(SettingInfo.CONSUMER_ARN).shardId(SettingInfo.SHARD_ID)
                 .startingPosition(s -> s.type(ShardIteratorType.LATEST)).build();
 
         SubscribeToShardResponseHandler responseHandler = SubscribeToShardResponseHandler.builder()
