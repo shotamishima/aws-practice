@@ -1,10 +1,5 @@
 package org.example.basicapp;
 
-/**
- * Hello world!
- *
- */
-
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.reactivestreams.Subscriber;
