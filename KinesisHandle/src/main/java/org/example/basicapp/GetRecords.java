@@ -8,8 +8,6 @@ import software.amazon.awssdk.services.kinesis.model.GetShardIteratorRequest;
 import software.amazon.awssdk.services.kinesis.model.GetShardIteratorResponse;
 import software.amazon.awssdk.services.kinesis.model.GetRecordsRequest;
 import software.amazon.awssdk.services.kinesis.model.GetRecordsResponse;
-import software.amazon.awssdk.services.kinesis.model.KinesisException;
-import software.amazon.kinesis.exceptions.KinesisClientLibDependencyException;
 
 public class GetRecords {
     public static void main(String[] args) {
