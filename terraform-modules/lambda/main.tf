@@ -11,3 +11,7 @@ terraform {
 provider "aws" {
   region = "ap-northeast-1"
 }
+
+resource "aws_lambda_function" "test_lambda" {
+
+}
