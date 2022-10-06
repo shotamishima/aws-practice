@@ -6,15 +6,18 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.events.KinesisEvent;
 import com.amazonaws.services.lambda.runtime.events.KinesisEvent.KinesisEventRecord;
 
-public class KinesisHandler implements RequestHandler<KinesisEvent, Void> {
+public class KinesisHandler implements RequestHandler<KinesisEvent, String> {
 
     @Override
-    public Void handleRequest(KinesisEvent kinesisEvent, Context context) {
+    public String handleRequest(KinesisEvent kinesisEvent, Context context) {
+
+        String response = "200 OK";
+
         for (KinesisEventRecord record : kinesisEvent.getRecords()) {
             System.out.println(new String(record.getKinesis().getData().array()));
 
         }
 
-        return null;
+        return response;
     }
 }
