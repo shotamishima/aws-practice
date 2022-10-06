@@ -26,3 +26,10 @@ resource "aws_lambda_function" "test_lambda" {
 
   role = "arn:aws:iam::${var.account_id}:role/lambda-kinesis-test"
 }
+
+resource "aws_lambda_event_source_mapping" "test_lambda_kinesis" {
+  # change to be able to get arn kinesis resource
+  event_source_arn  = "arn:aws:kinesis:ap-northeast-1:${var.account_id}:stream/terraform-kinesis-test"
+  function_name     = aws_lambda_function.test_lambda.arn
+  starting_position = "TRIM_HORIZON"
+}
