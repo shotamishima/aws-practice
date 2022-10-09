@@ -34,7 +34,7 @@ public class PutRecords {
 		try {
 			DataGenerator dataGenerator = new DataGenerator();
 
-			int index = 50;
+			int index = 5;
 			for (int x = 0; x < index; x++) {
 				StockTrade data = dataGenerator.getRandomData();
 				sendData(data, kinesisClient, streamName);

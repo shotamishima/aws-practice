@@ -30,14 +30,18 @@ public class GetRecords {
 
         GetShardIteratorRequest getShardIteratorRequest = GetShardIteratorRequest.builder()
                 .streamName(streamName).shardId(shardId).shardIteratorType("TRIM_HORIZON").build();
+
         GetShardIteratorResponse getShardIteratorResponse =
                 kinesisClient.getShardIterator(getShardIteratorRequest);
+
         String shardIterator = getShardIteratorResponse.shardIterator();
         System.out.println("Shard Iterator: " + shardIterator);
 
         GetRecordsRequest getRecordsRequest =
                 GetRecordsRequest.builder().shardIterator(shardIterator).build();
+
         GetRecordsResponse getRecordsResponse = kinesisClient.getRecords(getRecordsRequest);
+
         List<Record> records = getRecordsResponse.records();
         // System.out.println(getRecordsResponse.toString());
 
