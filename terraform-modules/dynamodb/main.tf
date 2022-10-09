@@ -13,26 +13,21 @@ provider "aws" {
 }
 
 resource "aws_dynamodb_table" "test_dynamo" {
-  name           = "GameScores"
+  name           = "Ticker"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
-  hash_key       = "UserId"
-  range_key      = "GameTitle"
+  hash_key       = "id"
+  range_key      = "tickerSymbol"
 
   attribute {
-    name = "UserId"
+    name = "id"
     type = "S"
   }
 
   attribute {
-    name = "GameTitle"
+    name = "tickerSymbol"
     type = "S"
-  }
-
-  attribute {
-    name = "TopScore"
-    type = "N"
   }
 
   ttl {
