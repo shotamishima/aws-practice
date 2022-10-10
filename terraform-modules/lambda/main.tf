@@ -19,6 +19,7 @@ resource "aws_lambda_function" "test_lambda" {
   package_type = "Image"
   image_uri    = "${var.account_id}.dkr.ecr.ap-northeast-1.amazonaws.com/test_repo:latest"
   timeout      = 300
+  memory_size  = 1024
 
   lifecycle {
     ignore_changes = [image_uri]
@@ -31,5 +32,5 @@ resource "aws_lambda_event_source_mapping" "test_lambda_kinesis" {
   # change to be able to get arn kinesis resource
   event_source_arn  = "arn:aws:kinesis:ap-northeast-1:${var.account_id}:stream/terraform-kinesis-test"
   function_name     = aws_lambda_function.test_lambda.arn
-  starting_position = "TRIM_HORIZON"
+  starting_position = "LATEST"
 }
