@@ -12,8 +12,12 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+variable "lambda_function_name" {
+  default = "test_lambda"
+}
+
 resource "aws_lambda_function" "test_lambda" {
-  function_name = "test_lambda"
+  function_name = var.lambda_function_name
   description   = "test with lambda, kinesis, and dynamo"
 
   package_type = "Image"
@@ -33,4 +37,9 @@ resource "aws_lambda_event_source_mapping" "test_lambda_kinesis" {
   event_source_arn  = "arn:aws:kinesis:ap-northeast-1:${var.account_id}:stream/terraform-kinesis-test"
   function_name     = aws_lambda_function.test_lambda.arn
   starting_position = "LATEST"
+}
+
+resource "aws_cloudwatch_log_group" "test_lambda_cloudwatch" {
+  name              = "/aws/lambda/${var.lambda_function_name}"
+  retention_in_days = 1
 }
