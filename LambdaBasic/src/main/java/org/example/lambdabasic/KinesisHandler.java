@@ -9,6 +9,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,8 +41,18 @@ public class KinesisHandler implements RequestHandler<KinesisEvent, String> {
             System.exit(1);
         }
 
+        ObjectMapper JSON = new ObjectMapper();
+
         for (KinesisEventRecord record : kinesisEvent.getRecords()) {
             System.out.println(new String(record.getKinesis().getData().array()));
+            try {
+                StockTrade trade =
+                        JSON.readValue(record.getKinesis().getData().array(), StockTrade.class);
+                System.out.println(trade);
+            } catch (IOException e) {
+                System.out.println(e);
+                return null;
+            }
         }
 
         return response;
