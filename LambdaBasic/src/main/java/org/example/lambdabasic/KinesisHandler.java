@@ -44,11 +44,11 @@ public class KinesisHandler implements RequestHandler<KinesisEvent, String> {
         ObjectMapper JSON = new ObjectMapper();
 
         for (KinesisEventRecord record : kinesisEvent.getRecords()) {
-            System.out.println(new String(record.getKinesis().getData().array()));
+            // System.out.println(new String(record.getKinesis().getData().array()));
             try {
                 StockTrade trade =
                         JSON.readValue(record.getKinesis().getData().array(), StockTrade.class);
-                System.out.println(trade);
+                System.out.println(trade.toString());
             } catch (IOException e) {
                 System.out.println(e);
                 return null;

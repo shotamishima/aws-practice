@@ -68,3 +68,4 @@ SettingInfo.java
 # general
 ClassDiagram.md
 .vscode
+update_ecr_image.sh
