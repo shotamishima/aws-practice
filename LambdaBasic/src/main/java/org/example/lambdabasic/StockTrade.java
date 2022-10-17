@@ -1,7 +1,12 @@
 package org.example.lambdabasic;
 
+import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class StockTrade {
+
+    private final static ObjectMapper JSON = new ObjectMapper();
 
     public enum TradeType {
         BUY, SELL
@@ -42,6 +47,19 @@ public class StockTrade {
 
     public long getId() {
         return id;
+    }
+
+    public String updatePrice(long price) {
+        this.price = price;
+        return "Success";
+    }
+
+    public byte[] toJsonAsBytes() {
+        try {
+            return JSON.writeValueAsBytes(this);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     @Override
