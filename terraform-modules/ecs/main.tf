@@ -12,6 +12,8 @@ provider "aws" {
   region = "ap-northeast-1"
 }
 
+// ECR
+
 resource "aws_ecr_repository" "ecr" {
   name                 = "test-ecs"
   image_tag_mutability = "MUTABLE"
@@ -21,9 +23,7 @@ resource "aws_ecr_repository" "ecr" {
 
 }
 
-//
-// Define VPC, subnet
-//
+// Define VPC, subnet, security group
 
 data "aws_vpc" "myvpc" {
   id = "vpc-0adc21e246e1ec991"
@@ -84,4 +84,94 @@ resource "aws_security_group" "myecs_service" {
     // from home pc
     cidr_blocks = ["60.108.236.22/32"]
   }
+}
+
+resource "aws_ecs_task_definition" "myecs" {
+  family                   = join("-", ["myecs", "task", "definition"])
+  requires_compatibilities = ["FARGATE"]
+
+  network_mode = "awsvpc"
+  cpu          = 256
+  memory       = 512
+
+  container_definitions = jsonencode([
+    {
+      name      = "test-server"
+      image     = "${aws_ecr_repository.ecr.repository_url}:latest"
+      essential = true
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+    }
+  ])
+
+  execution_role_arn = aws_iam_role.myecs_task_execution_role.arn
+}
+
+// ECS task execution role
+
+resource "aws_iam_role" "myecs_task_execution_role" {
+  name               = join("-", ["myecs", "execution-role"])
+  assume_role_policy = data.aws_iam_policy_document.myecs_task_execution_assume_policy.json
+}
+
+data "aws_iam_policy_document" "myecs_task_execution_assume_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "myecs_task_execution_policy" {
+  role       = aws_iam_role.myecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+// ECS task role
+// This role is not used because defined task don't use logdriver so far
+
+resource "aws_iam_role" "myecs_task_role" {
+  name               = join("-", ["myecs", "role"])
+  assume_role_policy = data.aws_iam_policy_document.myecs_task_assume_policy.json
+}
+
+data "aws_iam_policy_document" "myecs_task_assume_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_policy" "myecs_task_policy" {
+  name   = join("-", ["myecs", "policy"])
+  policy = data.aws_iam_policy_document.myecs_task_policy.json
+}
+
+data "aws_iam_policy_document" "myecs_task_policy" {
+  statement {
+    actions = [
+      "logs:CreateLogStream",
+      "logs:CreateLogGroup",
+      "logs:DescribeLogStreams",
+      "logs:PutLogEvents"
+    ]
+    effect    = "Allow"
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "myecs_task_role" {
+  role       = aws_iam_role.myecs_task_role.name
+  policy_arn = aws_iam_policy.myecs_task_policy.arn
 }
