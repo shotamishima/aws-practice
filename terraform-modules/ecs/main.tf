@@ -109,6 +109,7 @@ resource "aws_ecs_task_definition" "myecs" {
   ])
 
   execution_role_arn = aws_iam_role.myecs_task_execution_role.arn
+  task_role_arn      = aws_iam_role.myecs_task_role.arn
 }
 
 // ECS task execution role
@@ -174,4 +175,41 @@ data "aws_iam_policy_document" "myecs_task_policy" {
 resource "aws_iam_role_policy_attachment" "myecs_task_role" {
   role       = aws_iam_role.myecs_task_role.name
   policy_arn = aws_iam_policy.myecs_task_policy.arn
+}
+
+// Service definition
+//  What security group container run in
+
+resource "aws_ecs_service" "myecs" {
+  name    = join("-", ["myecs", "service"])
+  cluster = aws_ecs_cluster.myecs.id
+
+  task_definition = aws_ecs_task_definition.myecs.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [aws_subnet.mysubnet_public.id]
+    security_groups  = [aws_security_group.myecs_service.id]
+    assign_public_ip = true
+  }
+}
+
+// Cluster
+
+resource "aws_ecs_cluster" "myecs" {
+  name = join("-", ["myecs", "cluster"])
+}
+
+resource "aws_ecs_cluster_capacity_providers" "myecs" {
+  cluster_name = aws_ecs_cluster.myecs.name
+
+  capacity_providers = ["FARGATE"]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+
 }
